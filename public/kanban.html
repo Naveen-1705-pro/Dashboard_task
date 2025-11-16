@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Board - Task Management</title>
+    <meta name="description" content="A beautiful, production-grade Kanban board for efficient task management. Drag-and-drop interface with priority tracking, assignments, and due dates.">
+    <link rel="stylesheet" href="kanban.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="header-title">Kanban Board</h1>
+                    <p class="header-subtitle">Manage your tasks efficiently</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-container">
+                        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search tasks...">
+                    </div>
+                    <button id="addTaskBtn" class="btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14"></path>
+                            <path d="M12 5v14"></path>
+                        </svg>
+                        Add Task
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Kanban Board -->
+    <main class="main-content">
+        <div class="container">
+            <div class="board">
+                <!-- Todo Column -->
+                <div class="column" data-status="todo">
+                    <div class="column-header">
+                        <div class="column-header-left">
+                            <h2 class="column-title">To Do</h2>
+                            <span class="task-count" data-column="todo">0</span>
+                        </div>
+                        <button class="add-task-btn" data-status="todo">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"></path>
+                                <path d="M12 5v14"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="column-content todo-column" data-status="todo"></div>
+                </div>
+
+                <!-- In Progress Column -->
+                <div class="column" data-status="in-progress">
+                    <div class="column-header">
+                        <div class="column-header-left">
+                            <h2 class="column-title">In Progress</h2>
+                            <span class="task-count" data-column="in-progress">0</span>
+                        </div>
+                        <button class="add-task-btn" data-status="in-progress">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"></path>
+                                <path d="M12 5v14"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="column-content in-progress-column" data-status="in-progress"></div>
+                </div>
+
+                <!-- Done Column -->
+                <div class="column" data-status="done">
+                    <div class="column-header">
+                        <div class="column-header-left">
+                            <h2 class="column-title">Done</h2>
+                            <span class="task-count" data-column="done">0</span>
+                        </div>
+                        <button class="add-task-btn" data-status="done">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14"></path>
+                                <path d="M12 5v14"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="column-content done-column" data-status="done"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Task Modal -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title">Create New Task</h2>
+                <button id="closeModal" class="close-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18"></path>
+                        <path d="m6 6 12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <form id="taskForm" class="modal-body">
+                <div class="form-group">
+                    <label for="taskTitle" class="form-label">Title *</label>
+                    <input type="text" id="taskTitle" class="form-input" placeholder="Enter task title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="taskDescription" class="form-label">Description</label>
+                    <textarea id="taskDescription" class="form-textarea" placeholder="Add task description..." rows="4"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskPriority" class="form-label">Priority</label>
+                        <select id="taskPriority" class="form-select">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskStatus" class="form-label">Status</label>
+                        <select id="taskStatus" class="form-select">
+                            <option value="todo">To Do</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="done">Done</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskAssignee" class="form-label">Assignee</label>
+                        <input type="text" id="taskAssignee" class="form-input" placeholder="Assign to...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskDueDate" class="form-label">Due Date</label>
+                        <input type="date" id="taskDueDate" class="form-input">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="taskTags" class="form-label">Tags (comma-separated)</label>
+                    <input type="text" id="taskTags" class="form-input" placeholder="e.g. design, frontend, urgent">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="deleteTaskBtn" class="btn-delete" style="display: none;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 6h18"></path>
+                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                        </svg>
+                        Delete
+                    </button>
+                    <div class="button-group">
+                        <button type="button" id="cancelBtn" class="btn-secondary">Cancel</button>
+                        <button type="submit" class="btn-primary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                <polyline points="7 3 7 8 15 8"></polyline>
+                            </svg>
+                            <span id="submitBtnText">Create</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="kanban.js"></script>
+</body>
+</html>
